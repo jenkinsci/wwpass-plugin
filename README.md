@@ -8,7 +8,7 @@ Plugin for Jenkins CI implements authentication via WWPass Keyset.
 =========================
 * Install from Jenkins CI repo:
 
-  Go to **Manage Jenkins>Manage Plugins>Availiable** and search for "WWPass Authentication Plugin", check it and push one of the install buttons (according your choice).
+  Go to **Manage Jenkins>Manage Plugins>Availiable** and search for "WWPass Authentication Plugin", check it and push one of the install buttons (according to your choice).
   
 
 * Build a plugin from the sources:

@@ -1,7 +1,7 @@
 ## WWPass Authentication Plugin for Jenkins CI
 ==============================================
 Plugin for Jenkins CI, which implements authentucation via WWPass Keyset.
-
+==================================================
 
 
 ### Installing the plugin
@@ -21,7 +21,7 @@ Plugin for Jenkins CI, which implements authentucation via WWPass Keyset.
     ```
     
   Go to Manage Jenkins>Manage Plugins>Advanced and upload recently generated .HPI file from {sources}/target.
-  
+=====================================================
   
 ### Setup plugin:
 =================

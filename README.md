@@ -1,4 +1,4 @@
-## WWPass Authentication Plugin for Jenkins CI
+WWPass Authentication Plugin for Jenkins CI
 ==============================================
 Plugin for Jenkins CI, which implements authentucation via WWPass Keyset.
 

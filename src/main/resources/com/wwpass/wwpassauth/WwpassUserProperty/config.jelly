@@ -1,0 +1,36 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
+    <script type="text/javascript" src="${rootURL}/plugin/wwpass-auth/wwpass_button.js"/>
+    <f:entry title=" ">
+        <ul>
+            <j:forEach var="id" items="${instance.getProtectedPuids()}">
+                <a>
+                    <input type="hidden" value="${id.encryptedValue}" name="identifiers"/>
+                    <input type="button" value="${%Unbind WWPass Keyset}" class="wwpass-delete" />
+                </a>
+            </j:forEach>
+        </ul>
+        <j:if test="${instance.getProtectedPuids().isEmpty()}">
+            <input type="button" class='yui-button' value="${%Bind WWPass Keyset}"
+                   onclick="javascript:associate('${instance.descriptor.name}', '${rootURL}/federatedLoginService/wwpass/startAssociate')" />
+            <p id="wwp-message-header"> </p>
+            <p id="wwp-message-p"> </p>
+        </j:if>
+
+        <p id="finish-remove"> </p>
+
+        <script>
+            Behaviour.register({
+                "INPUT.wwpass-delete" : function (e) {
+                    makeButton(e,function(e) {
+                        Element.remove(findAncestor(e.target,"A")); // delete the whole LI
+                        document.getElementById('finish-remove').innerHTML = "Please, press on the Save or Apply button to confirm."
+                    });
+                }
+            });
+        </script>
+
+        <!-- a pointless value, just to make browser submit something even when there's no OpenID associated -->
+        <input type="hidden" value="bogus" name="bogus"/>
+    </f:entry>
+</j:jelly>

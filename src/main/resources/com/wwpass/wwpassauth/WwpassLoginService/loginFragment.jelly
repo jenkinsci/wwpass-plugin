@@ -1,0 +1,14 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <div style="padding-top:3em">
+
+        <div>
+            <st:include page="wwpass_button.jelly" />
+
+            <form method="post" action="federatedLoginService/wwpass/startLogin" id="wwpass_form">
+                <input type="hidden" id="ticket" name="ticket" value=""/>
+                <input type="hidden" name="from" value="${request.getParameter('from')}"/>
+            </form>
+        </div>
+
+    </div>
+</j:jelly>

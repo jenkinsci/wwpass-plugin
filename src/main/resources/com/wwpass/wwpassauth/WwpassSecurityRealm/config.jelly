@@ -1,0 +1,20 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
+
+    <f:entry title="${%Allow self-registration of new users?}" field="allowsSignup">
+        <f:checkbox default="true"/>
+    </f:entry>
+    <f:entry title="${%Path to the Service Provider's certificate file}" field="certFile">
+        <f:textbox/>
+    </f:entry>
+    <f:entry title="${%Path to the Service Provider's key file}" field="keyFile">
+        <f:textbox/>
+    </f:entry>
+
+    <f:advanced align="left">
+        <f:entry title="${%}Service Provider's name" field="name">
+            <f:textbox/>
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>

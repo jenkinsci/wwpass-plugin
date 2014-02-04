@@ -1,0 +1,53 @@
+
+
+<!--
+  This is used to create the first user.
+-->
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout title="${%Create first admin user}">
+        <l:hasPermission permission="${app.READ}" it="${app}">
+            <st:include page="sidepanel.jelly" it="${app}" />
+        </l:hasPermission>
+        <l:main-panel>
+            <h1>${%Create first admin user}</h1>
+
+            <link rel="stylesheet" href="${rootURL}/plugin/wwpass-auth/vk.css"/>
+            <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
+            <script type="text/javascript" src="${rootURL}/plugin/wwpass-auth/wwpass_button.js"/>
+
+            <j:if test="${!data.errorMessages.isEmpty()}">
+                <j:forEach var="err" items="${data.errorMessages}">
+                    <div class="error" style="margin-bottom:1em">
+                        ${err}
+                    </div>
+                </j:forEach>
+            </j:if>
+
+            <div class="col-sm-5">
+                <form action="createFirstAccount" method="post" id="wwpass_form" role="form">
+                    <div class="form-group">
+                        <label for="nickname" class="view">Nickname: </label>
+                        <input type="text" name="nickname" id="nickname" class='form-ctr' autofocus="true" placeholder="smith"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullname" class="view">Fullname: </label>
+                        <input type="text" name="fullname" id="fullname" class='form-ctr' placeholder="John Smith"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="view">Email: </label>
+                        <input type="email" name="email" id="email" class='form-ctr' placeholder="j.smith@mail.com"/>
+                    </div>
+                    <input type="hidden" id="ticket" name="ticket" value=""/>
+                </form>
+                <!--<input type="button" class='yui-button' value="${%Register}"
+                       onclick="token_auth('${it.name}')" />
+                <p id="wwp-message-header"> </p>
+                <p id="wwp-message-p"> </p>-->
+
+            </div>
+            <st:include page="wwpass_button.jelly" />
+
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

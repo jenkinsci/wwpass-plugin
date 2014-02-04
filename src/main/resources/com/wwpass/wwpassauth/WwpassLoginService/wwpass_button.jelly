@@ -1,0 +1,18 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
+
+    <link rel="stylesheet" href="${rootURL}/plugin/wwpass-auth/vk.css"/>
+    <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
+    <script type="text/javascript" src="${rootURL}/plugin/wwpass-auth/wwpass_button.js"/>
+
+    <!--<p class="btnlogin_position btn-deselect"/>
+    <button id="btn-login" class="button-login" onclick="token_auth('${it.descriptor.name}')">
+        <span class="button-login-icon"></span><span class="button-login-text">Sign In with WWPass</span>
+    </button>-->
+
+    <a href="#" style="margin-top:15px;" id="wwpass_button" onclick="token_auth('${it.descriptor.name}')"></a>
+
+    <p id="wwp-message-header"> </p>
+    <p id="wwp-message-p"> </p>
+
+</j:jelly>

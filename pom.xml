@@ -7,14 +7,21 @@
         <version>1.542</version>
     </parent>
 
-    <groupId>com.wwpass</groupId>
-    <artifactId>jenkins-auth</artifactId>
+    <artifactId>wwpass-plugin</artifactId>
     <version>1.0-Release</version>
     <packaging>hpi</packaging>
     <name>WWPass Authentication Plugin</name>
     <description>WWPass Authentication Plugin for Jenkins CI</description>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/WWPass+Authentication+Plugin</url>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
     <developers>
         <developer>
             <id>spanyushkin</id>

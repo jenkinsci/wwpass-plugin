@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>wwpass-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>hpi</packaging>
     <name>WWPass Authentication Plugin</name>
     <description>WWPass Authentication Plugin for Jenkins CI</description>

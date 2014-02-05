@@ -24,9 +24,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:ssh://github.com/wwpass/jenkins-wwpass-auth.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:wwpass/jenkins-wwpass-auth.git</developerConnection>
-        <url>https://github.com/wwpass/jenkins-wwpass-auth.git</url>
+        <connection>scm:git:ssh://github.com/jenkinsci/wwpass-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:jenkinsci/wwpass-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/wwpass-plugin.git</url>
     </scm>
 
     <repositories>

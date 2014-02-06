@@ -7,8 +7,9 @@
         <l:main-panel>
             <h1>${%Sign In with WWPass}</h1>
             <div>
+                <meta http-equiv="X-UA-Compatible" content="IE=10" />
                 <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
-                <script type="text/javascript" src="${rootURL}/plugin/wwpass-auth/wwpass_button.js"/>
+                <script type="text/javascript" src="${rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
 
                 <j:if test="${errorMessage!=null}">
                     <div class="error" style="margin-bottom:1em">

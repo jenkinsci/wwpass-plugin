@@ -8,7 +8,7 @@ Plugin for Jenkins CI implements authentication via WWPass Keyset.
 =========================
 * Build a plugin from the sources:
 
-  After cloning the *jenkins-wwpass-auth* repo, use Maven to make HPI package:
+  After cloning the *jenkinsci/wwpass-plugin* repo, use Maven to make HPI package:
     cd to folder where you put the downloaded sources and run the following command:
   
     ```

@@ -1,20 +1,47 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
 
-    <meta http-equiv="X-UA-Compatible" content="IE=10" />
-
     <link rel="stylesheet" href="${rootURL}/plugin/wwpass-plugin/vk.css"/>
-    <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
+    <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.js" />
+    <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.qrcode.min.js"/>
     <script type="text/javascript" src="${rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
 
-    <!--<p class="btnlogin_position btn-deselect"/>
-    <button id="btn-login" class="button-login" onclick="token_auth('${it.descriptor.name}')">
-        <span class="button-login-icon"></span><span class="button-login-text">Sign In with WWPass</span>
-    </button>-->
+    <!--<a href="#" style="margin-top:15px;" id="wwpass_button" onclick="token_auth('${it.descriptor.name}')"></a>-->
 
-    <a href="#" style="margin-top:15px;" id="wwpass_button" onclick="token_auth('${it.descriptor.name}')"></a>
 
-    <p id="wwp-message-header"> </p>
-    <p id="wwp-message-p"> </p>
+    <div class="highlight-gradient" style="width:410px; min-height: 180px;">
+        <div style="padding-bottom: 20px;">
+            <p style="color:#fff; font-size: 30px; text-align:center; line-height:26px;">WWPass Authentication</p>
+            <div id='qrcode'/>
+            <p class="btnlogin_position btn-deselect">
+                <button type='submit' id="btn-login" class="button-login" onclick="token_auth('${it.descriptor.name}')">
+                    <span class="button-login-icon"/><span class="button-login-text">Sign In with WWPass</span>
+                </button>
+            </p>
+        </div>
+    </div>
 
+
+    <style type="text/css">
+        #qrcode img {
+        margin: auto;
+        margin-top: 20px;
+        padding: 20px;
+        border: 1 solid black;
+        background-color: white;
+        }
+    </style>
+
+    <script type="text/javascript">
+        options = {
+        'render': 'qrcode',
+        'ticketURL' : '${rootURL}/federatedLoginService/wwpass/getTicket',
+        callback : function(status, message) {
+            auth_cb(status, message);
+        }
+        };
+
+        wwpassQRCodeAuth(options);
+    </script>
+    
 </j:jelly>

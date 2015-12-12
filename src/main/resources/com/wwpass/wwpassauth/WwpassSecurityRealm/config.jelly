@@ -11,10 +11,10 @@
         <f:textbox/>
     </f:entry>
 
-    <f:advanced align="left">
+    <!--<f:advanced align="left">
         <f:entry title="${%}Service Provider's name" field="name">
             <f:textbox/>
         </f:entry>
-    </f:advanced>
+    </f:advanced>-->
 
 </j:jelly>

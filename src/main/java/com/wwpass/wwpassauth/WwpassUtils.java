@@ -24,6 +24,8 @@ package com.wwpass.wwpassauth;
 import com.wwpass.connection.WWPassConnection;
 import com.wwpass.connection.exceptions.WWPassProtocolException;
 import hudson.model.Failure;
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,6 +42,7 @@ public class WwpassUtils {
     public static final String DEFAULT_KEY_FILE_WINDOWS = "C:/wwpass/wwpass_sp.key";
     public static final String DEFAULT_CERT_FILE_LINUX = "/etc/ssl/certs/wwpass_sp.crt";
     public static final String DEFAULT_KEY_FILE_LINUX = "/etc/ssl/certs/wwpass_sp.key";
+    public static final int DEFAULT_TICKET_TTL = 300;
 
     public static String authenticateInWwpass(String ticket, String certFile, String keyFile) {
 
@@ -82,6 +85,24 @@ public class WwpassUtils {
             throw new Failure(Messages.WwpassSession_AuthError());
         } catch (GeneralSecurityException e) {
             LOGGER.log(Level.SEVERE, "An error occurred while trying to get Service Provider's name: ", e);
+            throw new Failure(Messages.WwpassSession_AuthError());
+        }
+    }
+    
+    public static HttpResponse getJsonTicket(String authType, String certFile, String keyFile) {
+        WWPassConnection conn;
+        try {
+            conn = new WWPassConnection(certFile, keyFile);
+            String ticket = conn.getTicket(authType, DEFAULT_TICKET_TTL);
+            return HttpResponses.plainText("{ " +
+                        "\"ticket\": \"" + ticket +"\"" + 
+                        ", \"ttl\": " + DEFAULT_TICKET_TTL +
+                    "}");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred while trying to get WWPass ticket: ", e);
+            throw new Failure(Messages.WwpassSession_AuthError());
+        } catch (GeneralSecurityException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred while trying to get WWPass ticket: ", e);
             throw new Failure(Messages.WwpassSession_AuthError());
         }
     }

@@ -14,7 +14,7 @@
             <p style="color:#fff; font-size: 30px; text-align:center; line-height:26px;">WWPass Authentication</p>
             <div id='qrcode'/>
             <p class="btnlogin_position btn-deselect">
-                <button type='submit' id="btn-login" class="button-login" onclick="token_auth('${it.descriptor.name}')">
+                <button type='button' id="btn-login" class="button-login" onclick="token_auth('${it.descriptor.name}')">
                     <span class="button-login-icon"/><span class="button-login-text">Sign In with WWPass</span>
                 </button>
             </p>

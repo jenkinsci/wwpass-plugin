@@ -1,29 +1,24 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     
-    <meta http-equiv="X-UA-Compatible" content="IE=10" />
-
-    <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.js" />
-    <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.qrcode.min.js"/>
-    <script type="text/javascript" src="${rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
     <f:entry title=" ">
         <ul>
             <j:forEach var="id" items="${instance.getProtectedPuids()}">
                 <a>
                     <input type="hidden" value="${id.encryptedValue}" name="identifiers"/>
-                    <input type="button" value="${%Unbind WWPass Keyset}" class="wwpass-delete" />
+                    <p>
+                        <b>${id.plainText}</b>
+                        <input type="button" value="${%Unbind WWPass Keyset}" class="wwpass-delete" />
+                    </p>
+                    
                 </a>
             </j:forEach>
         </ul>
-        <j:if test="${instance.getProtectedPuids().isEmpty()}">
-            <input type="button" class='yui-button' value="${%Bind WWPass Keyset}"
-                   onclick="javascript:associate('${instance.descriptor.name}', '${rootURL}/federatedLoginService/wwpass/startAssociate')" />
-            <p id="wwp-message-header"> </p>
-            <p id="wwp-message-p"> </p>
-        </j:if>
-
-        <p id="finish-remove"> </p>
-
-        <script>
+        
+        <p id="finish-remove" style="color: red;"> </p>
+        
+        <st:include page="bind_button.jelly" it="${instance}"/>
+        
+        <script type="text/javascript">
             Behaviour.register({
                 "INPUT.wwpass-delete" : function (e) {
                     makeButton(e,function(e) {
@@ -34,7 +29,6 @@
             });
         </script>
 
-        <!-- a pointless value, just to make browser submit something even when there's no OpenID associated -->
         <input type="hidden" value="bogus" name="bogus"/>
     </f:entry>
 </j:jelly>

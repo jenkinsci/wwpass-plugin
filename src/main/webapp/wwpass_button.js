@@ -3,7 +3,7 @@ function token_auth(sp_name) {
     wwpass_auth(sp_name, auth_cb);
 }
 
-function associate(sp_name, path) {
+function create_wwpass_form(path) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
     form.setAttribute("action", path);
@@ -17,7 +17,10 @@ function associate(sp_name, path) {
     form.appendChild(hiddenField);
 
     document.body.appendChild(form);
+}
 
+function associate(sp_name, path) {
+    create_wwpass_form(path);
     wwpass_auth(sp_name, auth_cb);
 }
 

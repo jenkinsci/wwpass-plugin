@@ -1,15 +1,18 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
+    <link rel="stylesheet" href="${app.rootURL}/plugin/wwpass-plugin/vk.css"/>
+    <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.js" />
+    <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.qrcode.min.js"/>
+    <script type="text/javascript" src="${app.rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
+    
     <l:layout title="${%Signup}">
+        
+        <l:hasPermission permission="${app.READ}">
+            <st:include page="sidepanel.jelly" it="${app}" />
+        </l:hasPermission>
+        
         <l:main-panel>
-
-<!--            <link rel="stylesheet" href="${rootURL}/plugin/wwpass-plugin/vk.css"/>
-            <meta http-equiv="X-UA-Compatible" content="IE=10" />
-            <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
-            <script type="text/javascript" src="${rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>-->
-
-            <h1>${%Please signup}</h1>
 
             <j:if test="${!data.errorMessages.isEmpty()}">
                 <j:forEach var="err" items="${data.errorMessages}">
@@ -19,30 +22,66 @@
                 </j:forEach>
             </j:if>
 
-            <div class="col-sm-5">
-                <form action="createAccount" method="post" id="wwpass_form" role="form">
-                    <div class="form-group">
-                        <label for="nickname" class="view">Nickname: </label>
-                        <input type="text" name="nickname" id="nickname" class='form-ctr' autofocus="true" placeholder="smith"/>
+            <div class="highlight-gradient" style="width:410px; min-height: 180px;">
+                <div style="padding-bottom: 20px;">
+                    <p style="color:#fff; font-size: 30px; text-align:center; line-height:26px;">New Account</p>
+                    <div id="_form" >
+                        <form action="createAccount" method="post" id="wwpass_form" role="form">
+                            <label for="nickname" style="color: white;">Nickname: </label>
+                            <input type="text" name="nickname" id="nickname" autofocus="true" placeholder="smith"/>
+                            <label for="fullname" style="color: white;">Fullname: </label>
+                            <input type="text" name="fullname" id="fullname" placeholder="John Smith"/>
+                            <label for="email" style="color: white;">Email: </label>
+                            <input type="email" name="email" id="email" placeholder="j.smith@mail.com"/>
+                            <input type="hidden" id="ticket" name="ticket" value=""/>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="fullname" class="view">Fullname: </label>
-                        <input type="text" name="fullname" id="fullname" class='form-ctr' placeholder="John Smith"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="view">Email: </label>
-                        <input type="email" name="email" id="email" class='form-ctr' placeholder="j.smith@mail.com"/>
-                    </div>
-                    <input type="hidden" id="ticket" name="ticket" value=""/>
-                </form>
-                <!--<input type="button" class='yui-button' value="${%Register}"
-                       onclick="token_auth('${it.name}')" />
-                <p id="wwp-message-header"> </p>
-                <p id="wwp-message-p"> </p>-->
-
+                    <div id='qrcode'/>
+                    <p class="btnlogin_position btn-deselect">
+                        <button type='button' id="btn-login" class="button-login" onclick="token_auth('${it.name}')">
+                            <span class="button-login-icon"/><span class="button-login-text">Sign Up with WWPass</span>
+                        </button>
+                    </p>
+                </div>
             </div>
-            <st:include page="wwpass_button.jelly" />
+            
+            <!--<st:include page="wwpass_button.jelly" />-->
 
         </l:main-panel>
     </l:layout>
+
+    <style type="text/css">
+        #qrcode img {
+        margin: auto;
+        margin-top: 20px;
+        padding: 20px;
+        border: 1 solid black;
+        background-color: white;
+        }
+        
+        #_form lable {
+            display: block;
+        }
+        #_form {
+            width: 256px;
+            margin: 10px auto 40px auto;
+        }
+        #_form input {
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        options = {
+        'render': 'qrcode',
+        'ticketURL' : '${app.rootURL}/federatedLoginService/wwpass/getTicket',
+        callback : function(status, message) {
+        auth_cb(status, message);
+        }
+        };
+
+        wwpassQRCodeAuth(options);
+    </script>
 </j:jelly>

@@ -6,7 +6,7 @@
     <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.qrcode.min.js"/>
     <script type="text/javascript" src="${rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
 
-    <div class="highlight-gradient" style="width:410px; min-height: 180px; margin-left: auto; margin-right: auto;">
+    <div class="highlight-gradient" style="width:410px; min-height: 180px; margin-left: 20px; margin-right: auto;">
         <div style="padding-bottom: 20px;">
             <p style="color:#fff; font-size: 30px; text-align:center; line-height:26px;">Bind new WWPass Keyset</p>
             <div id='qrcode'/>
@@ -35,7 +35,7 @@
     <script type="text/javascript">
         options = {
             'render': 'qrcode',
-            'ticketURL' : '${rootURL}/federatedLoginService/wwpass/getTicket',
+            'ticketURL' : '${app.rootURL}/federatedLoginService/wwpass/getTicket',
             callback : function(status, message) {
             auth_cb(status, message);
             }
@@ -43,7 +43,7 @@
 
         wwpassQRCodeAuth(options);
 
-        create_wwpass_form('${rootURL}/federatedLoginService/wwpass/startAssociate');
+        create_wwpass_form('${app.rootURL}/federatedLoginService/wwpass/startAssociate');
     </script>
 
 </j:jelly>

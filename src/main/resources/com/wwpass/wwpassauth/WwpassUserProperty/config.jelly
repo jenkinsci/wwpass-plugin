@@ -1,7 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:entry title=" ">
-        <ul>
+        <!--<ul>
             <j:forEach var="id" items="${instance.getProtectedPuids()}">
                 <a>
                     <input type="hidden" value="${id.encryptedValue}" name="identifiers"/>
@@ -12,7 +12,21 @@
                     
                 </a>
             </j:forEach>
-        </ul>
+        </ul>-->
+        
+        <table>
+            <j:forEach var="id" items="${instance.getProtectedPuids()}">
+                <tr>
+                    <td style="line-height: 35px; width: 256px;"><b>${id.plainText}</b></td>
+                    <td>
+                        <a>
+                            <input type="hidden" value="${id.encryptedValue}" name="identifiers"/>
+                            <input type="button" value="${%Unbind WWPass Keyset}" class="wwpass-delete" />
+                        </a>
+                    </td>
+                </tr>
+            </j:forEach>
+        </table>
         
         <p id="finish-remove" style="color: red;"> </p>
         

@@ -194,7 +194,7 @@ public class WwpassSecurityRealm extends SecurityRealm {
         a = this.getSecurityComponents().manager.authenticate(a);
         SecurityContextHolder.getContext().setAuthentication(a);
 
-        return new HttpRedirect(Jenkins.getInstance().getRootUrl());
+        return HttpResponses.redirectToContextRoot();
     }
 
     /**

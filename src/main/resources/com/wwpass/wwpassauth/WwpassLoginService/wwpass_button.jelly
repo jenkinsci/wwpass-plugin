@@ -1,10 +1,10 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
 
-    <link rel="stylesheet" href="${rootURL}/plugin/wwpass-plugin/vk.css"/>
+    <link rel="stylesheet" href="${app.rootURL}/plugin/wwpass-plugin/vk.css"/>
     <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.js" />
     <script type="text/javascript" src="//cdn.wwpass.com/packages/latest/wwpass.qrcode.min.js"/>
-    <script type="text/javascript" src="${rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
+    <script type="text/javascript" src="${app.rootURL}/plugin/wwpass-plugin/wwpass_button.js"/>
 
     <!--<a href="#" style="margin-top:15px;" id="wwpass_button" onclick="token_auth('${it.descriptor.name}')"></a>-->
 
@@ -35,7 +35,7 @@
     <script type="text/javascript">
         options = {
         'render': 'qrcode',
-        'ticketURL' : '${rootURL}/federatedLoginService/wwpass/getTicket',
+        'ticketURL' : '${app.rootURL}/federatedLoginService/wwpass/getTicket',
         callback : function(status, message) {
             auth_cb(status, message);
         }

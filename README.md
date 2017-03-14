@@ -1,13 +1,12 @@
 WWPass Authentication Plugin for Jenkins CI
 ==============================================
+
 Plugin for Jenkins CI implements authentication via WWPass Keyset.
 
 *Note:* This plugin is compatible with Jenkins CI version 1.542 or higher.
 
-
-
 ### Plugin installation
-=========================
+
 * Build a plugin from the sources:
 
   After cloning the *jenkinsci/wwpass-plugin* repo, use Maven to make HPI package:
@@ -19,15 +18,12 @@ Plugin for Jenkins CI implements authentication via WWPass Keyset.
     
   Go to **Manage Jenkins>Manage Plugins>Advanced** and upload the recently generated .HPI file from *{sources}/target*.
   
-
 * Install from Jenkins CI repo:
 
   Go to **Manage Jenkins>Manage Plugins>Availiable** and search for "WWPass Authentication Plugin", check it and push one of the install buttons (according to your choice). 
-
-
   
 ### Plugin setup
-================
+
 First, you need to register at https://developers.wwpass.com/ and get a Service Provider's personal certificate and key pair.
 
 Plugin searches the certificate-key pair on the following paths by default:
@@ -35,6 +31,6 @@ Plugin searches the certificate-key pair on the following paths by default:
 |                  |         Windows         |             Linux            |
 |:----------------:|:-----------------------:|:----------------------------:|
 | Certificate file | C:/wwpass/wwpass_sp.crt | /etc/ssl/certs/wwpass_sp.crt | 
-|     Key file     | C:/wwpass/wwpass_sp.key | /etc/ssl/certs/wwpass_sp.key |
+| Key file         | C:/wwpass/wwpass_sp.key | /etc/ssl/certs/wwpass_sp.key |
 
 You may use this paths and names. If you want to use other paths and names for these files, change it in Jenkins settings (if you use WWPass authentication as a secondary realm, change these properties in **Manage Jenkins>Configure System**, or if you use it as a primary realm - in **Manage Jenkins>Configure Global Security**).

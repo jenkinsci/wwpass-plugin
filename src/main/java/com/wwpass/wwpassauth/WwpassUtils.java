@@ -46,7 +46,6 @@ public class WwpassUtils {
     public static final int DEFAULT_TICKET_TTL = 300;
 
     public static String authenticateInWwpass(String ticket, String certFile, String keyFile) {
-
         WWPassConnection conn = null;
         String puid;
         String newTicket;
@@ -67,12 +66,10 @@ public class WwpassUtils {
             LOGGER.log(Level.SEVERE, "An error occurred while trying to get PUID: ", e);
             throw new Failure(Messages.WwpassSession_AuthError());
         }
-
         if (puid == null) {
             LOGGER.severe("PUID cannot be null. ");
             throw new Failure(Messages.WwpassSession_AuthError());
         }
-
         return puid;
     }
 
@@ -89,14 +86,14 @@ public class WwpassUtils {
             throw new Failure(Messages.WwpassSession_AuthError());
         }
     }
-    
+
     public static HttpResponse getJsonTicket(String authType, String certFile, String keyFile) {
         WWPassConnection conn;
         try {
             conn = new WWPassConnection(certFile, keyFile);
             String ticket = conn.getTicket(authType, DEFAULT_TICKET_TTL);
             return HttpResponses.plainText("{ " +
-                        "\"ticket\": \"" + ticket +"\"" + 
+                        "\"ticket\": \"" + ticket + "\"" +
                         ", \"ttl\": " + DEFAULT_TICKET_TTL +
                     "}");
         } catch (IOException e) {

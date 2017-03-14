@@ -73,9 +73,7 @@ public class WwpassLoginService extends FederatedLoginService {
     }
 
     private String getCertFile() {
-
         String certFile = getDescriptor().getCertFile();
-
         if (certFile == null || certFile.isEmpty()) {
             if (System.getProperty("os.name").startsWith("Windows")) {
                 certFile = DEFAULT_CERT_FILE_WINDOWS;
@@ -86,14 +84,11 @@ public class WwpassLoginService extends FederatedLoginService {
                 throw new Failure(Messages.WwpassSession_AuthError());
             }
         }
-
         return certFile;
     }
 
     private String getKeyFile() {
-
         String keyFile = getDescriptor().getKeyFile();
-
         if (keyFile == null || keyFile.isEmpty()) {
             if (System.getProperty("os.name").startsWith("Windows")) {
                 keyFile = DEFAULT_KEY_FILE_WINDOWS;
@@ -104,7 +99,6 @@ public class WwpassLoginService extends FederatedLoginService {
                 throw new Failure(Messages.WwpassSession_AuthError());
             }
         }
-
         return keyFile;
     }
 
@@ -119,21 +113,15 @@ public class WwpassLoginService extends FederatedLoginService {
 
     public HttpResponse doStartLogin(@QueryParameter String ticket, @QueryParameter final String from)
             throws IOException, GeneralSecurityException {
-
         String puid = authenticateInWwpass(ticket, getCertFile(), getKeyFile());
-
         WwpassIdentityImpl id = new WwpassIdentityImpl(new WwpassIdentity(puid));
         User u = id.signin();
-
         return HttpResponses.redirectToContextRoot();
     }
 
     public HttpResponse doStartAssociate(@QueryParameter String ticket) throws IOException {
-
         String puid = authenticateInWwpass(ticket, getCertFile(), getKeyFile());
-
         WwpassIdentityImpl id = new WwpassIdentityImpl(new WwpassIdentity(puid));
-
         if (id.locateUser() == null) {
             id.addToCurrentUser();
             //return new HttpRedirect("onAssociationSuccess");
@@ -141,9 +129,8 @@ public class WwpassLoginService extends FederatedLoginService {
         } else {
             return new HttpRedirect("onAssociationError");
         }
-
     }
-    
+
     public HttpResponse doGetTicket() throws IOException {
         return getJsonTicket("", getCertFile(), getKeyFile());
     }
@@ -152,8 +139,7 @@ public class WwpassLoginService extends FederatedLoginService {
         return WwpassUtils.getName(getCertFile(),getKeyFile());
     }
 
-    public DescriptorImpl getDescriptor()
-    {
+    public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) Descriptor.find(DescriptorImpl.class.getName());
     }
 
@@ -189,11 +175,14 @@ public class WwpassLoginService extends FederatedLoginService {
             return "WWPass ID";
         }
     }
+
     @Extension
     public static class DescriptorImpl extends GlobalConfiguration {
 
-        public DescriptorImpl()
-        {
+        private String certFile;
+        private String keyFile;
+
+        public DescriptorImpl() {
             load();
         }
 
@@ -202,20 +191,15 @@ public class WwpassLoginService extends FederatedLoginService {
             return "WWPass Plugin LoginService";
         }
 
-        private String certFile;
-        private String keyFile;
-
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
             this.certFile = json.getString("certFile");
             this.keyFile = json.getString("keyFile");
-
             save();
-            return super.configure(req, json);    //To change body of overridden methods use File | Settings | File Templates.
+            return super.configure(req, json); // To change body of overridden methods use File | Settings | File Templates
         }
 
         public String getCertFile() {
-
             if (certFile == null || certFile.isEmpty()) {
                 if (System.getProperty("os.name").startsWith("Windows")) {
                     certFile = DEFAULT_CERT_FILE_WINDOWS;
@@ -226,9 +210,9 @@ public class WwpassLoginService extends FederatedLoginService {
                     throw new Failure(Messages.WwpassSession_AuthError());
                 }
             }
-
             return certFile;
         }
+
         public String getKeyFile() {
             if (keyFile == null || keyFile.isEmpty()) {
                 if (System.getProperty("os.name").startsWith("Windows")) {
@@ -240,9 +224,9 @@ public class WwpassLoginService extends FederatedLoginService {
                     throw new Failure(Messages.WwpassSession_AuthError());
                 }
             }
-
             return keyFile;
         }
+
         public String getName() {
             return WwpassUtils.getName(getCertFile(), getKeyFile());
         }

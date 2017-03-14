@@ -37,27 +37,21 @@ import org.acegisecurity.providers.AbstractAuthenticationToken;
 public class WwpassAuthenticationToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = 1L;
+
     private final String puid;
     private final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-
     public WwpassAuthenticationToken(String puid) {
         super(new GrantedAuthority[] {});
-
         this.puid = puid;
-
         setAuthenticated(false);
-
         authorities.add(SecurityRealm.AUTHENTICATED_AUTHORITY);
     }
 
     public WwpassAuthenticationToken(String puid, GrantedAuthority[] authorities) {
         super(new GrantedAuthority[] {});
-
         this.puid = puid;
-
         setAuthenticated(true);
-
         this.authorities.addAll(Arrays.asList(authorities));
     }
 

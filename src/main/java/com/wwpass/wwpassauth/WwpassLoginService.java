@@ -136,7 +136,7 @@ public class WwpassLoginService extends FederatedLoginService {
     }
 
     private String getName() {
-        return WwpassUtils.getName(getCertFile(),getKeyFile());
+        return WwpassUtils.getName(getCertFile(), getKeyFile());
     }
 
     public DescriptorImpl getDescriptor() {

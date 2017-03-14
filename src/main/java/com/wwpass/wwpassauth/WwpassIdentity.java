@@ -128,7 +128,7 @@ public class WwpassIdentity extends UserProperty implements UserDetails {
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                LOGGER.log(Level.WARNING, "Failed to set the e-mail address",e);
+                LOGGER.log(Level.WARNING, "Failed to set the e-mail address", e);
             }
         }
     }

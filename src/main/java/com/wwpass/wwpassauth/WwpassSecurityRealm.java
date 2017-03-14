@@ -196,11 +196,11 @@ public class WwpassSecurityRealm extends SecurityRealm {
             u = loadUserByUsername(puid);
         } catch(UsernameNotFoundException e) {
             if (allowsSignup()) {
-                req.setAttribute("errorMessage",Messages.WwpassSecurityRealm_NoSuchUserAllowsSignup());
+                req.setAttribute("errorMessage", Messages.WwpassSecurityRealm_NoSuchUserAllowsSignup());
             } else {
-                req.setAttribute("errorMessage",Messages.WwpassSecurityRealm_NoSuchUserDisableSignup());
+                req.setAttribute("errorMessage", Messages.WwpassSecurityRealm_NoSuchUserDisableSignup());
             }
-            req.getView(this, "login.jelly").forward(req,rsp);
+            req.getView(this, "login.jelly").forward(req, rsp);
             throw e;
         }
         if (!u.isAccountNonLocked() || !u.isEnabled()) {
@@ -225,14 +225,14 @@ public class WwpassSecurityRealm extends SecurityRealm {
         SecurityContextHolder.getContext().setAuthentication(a);
 
         // then back to top
-        req.getView(this,"success.jelly").forward(req,rsp);
+        req.getView(this, "success.jelly").forward(req, rsp);
     }
 
     /**
      * @return <code>null</code> if failed. The browser is already redirected to retry by the time this method returns.
      *      a valid {@link User} object if the user creation was successful.
      */
-    private User createAccount(StaplerRequest req, StaplerResponse rsp,String formView) throws ServletException, IOException {
+    private User createAccount(StaplerRequest req, StaplerResponse rsp, String formView) throws ServletException, IOException {
         SignupInfo si = new SignupInfo(req);
         String puid = authenticateInWwpass(si.ticket, certFile, keyFile);
 
@@ -271,8 +271,8 @@ public class WwpassSecurityRealm extends SecurityRealm {
 
         if (!si.errorMessages.isEmpty()) {
             // failed. ask the user to try again.
-            req.setAttribute("data",si);
-            req.getView(this, formView).forward(req,rsp);
+            req.setAttribute("data", si);
+            req.getView(this, formView).forward(req, rsp);
             return null;
         }
 
@@ -305,7 +305,7 @@ public class WwpassSecurityRealm extends SecurityRealm {
 
     private User _doCreateAccount(StaplerRequest req, StaplerResponse rsp, String formView) throws ServletException, IOException {
         if (!allowsSignup()) {
-            throw HttpResponses.error(SC_UNAUTHORIZED,new Exception("User sign up is prohibited"));
+            throw HttpResponses.error(SC_UNAUTHORIZED, new Exception("User sign up is prohibited"));
         }
         boolean firstUser = !hasSomeUser();
         User u = createAccount(req, rsp, formView);
@@ -326,7 +326,7 @@ public class WwpassSecurityRealm extends SecurityRealm {
      */
     public void doCreateFirstAccount(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
         if (hasSomeUser()) {
-            rsp.sendError(SC_UNAUTHORIZED,"First user was already created");
+            rsp.sendError(SC_UNAUTHORIZED, "First user was already created");
             return;
         }
         User u = createAccount(req, rsp, "firstUser.jelly");
@@ -385,10 +385,10 @@ public class WwpassSecurityRealm extends SecurityRealm {
                     ((HttpServletResponse)response).sendRedirect("securityRealm/firstUser");
                 } else { // the first user already created. the role of this filter is over.
                     PluginServletFilter.removeFilter(this);
-                    chain.doFilter(request,response);
+                    chain.doFilter(request, response);
                 }
             } else {
-                chain.doFilter(request,response);
+                chain.doFilter(request, response);
             }
         }
 

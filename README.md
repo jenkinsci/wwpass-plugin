@@ -16,15 +16,15 @@ Plugin for Jenkins CI implements authentication via WWPass Keyset.
     mvn package -DskipTests
     ```
     
-  Go to **Manage Jenkins>Manage Plugins>Advanced** and upload the recently generated .HPI file from *{sources}/target*.
+  Go to **Manage Jenkins > Manage Plugins > Advanced** and upload the recently generated .HPI file from *{sources}/target*.
   
 * Install from Jenkins CI repo:
 
-  Go to **Manage Jenkins>Manage Plugins>Availiable** and search for "WWPass Authentication Plugin", check it and push one of the install buttons (according to your choice). 
+  Go to **Manage Jenkins > Manage Plugins > Availiable** and search for "WWPass Authentication Plugin", check it and push one of the install buttons (according to your choice). 
   
 ### Plugin setup
 
-First, you need to register at https://developers.wwpass.com/ and get a Service Provider's personal certificate and key pair.
+First, you need to register at https://developers.wwpass.com and get a Service Provider's personal certificate and key pair.
 
 Plugin searches the certificate-key pair on the following paths by default:
 
@@ -33,4 +33,4 @@ Plugin searches the certificate-key pair on the following paths by default:
 | Certificate file | C:/wwpass/wwpass_sp.crt | /etc/ssl/certs/wwpass_sp.crt | 
 | Key file         | C:/wwpass/wwpass_sp.key | /etc/ssl/certs/wwpass_sp.key |
 
-You may use this paths and names. If you want to use other paths and names for these files, change it in Jenkins settings (if you use WWPass authentication as a secondary realm, change these properties in **Manage Jenkins>Configure System**, or if you use it as a primary realm - in **Manage Jenkins>Configure Global Security**).
+You may use this paths and names. If you want to use other paths and names for these files, change it in Jenkins settings (if you use WWPass authentication as a secondary realm, change these properties in **Manage Jenkins > Configure System**, or if you use it as a primary realm -- in **Manage Jenkins > Configure Global Security**).

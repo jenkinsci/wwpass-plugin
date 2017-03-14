@@ -80,7 +80,6 @@ public class WwpassSecurityRealm extends SecurityRealm {
 
     private final String certFile;
     private final String keyFile;
-    private final String name;
 
     /**
      * If true, sign up is not allowed.
@@ -90,9 +89,8 @@ public class WwpassSecurityRealm extends SecurityRealm {
     private final boolean disableSignup;
 
     @DataBoundConstructor
-    public WwpassSecurityRealm(String certFile, String keyFile, String name, boolean allowsSignup) {
+    public WwpassSecurityRealm(String certFile, String keyFile, boolean allowsSignup) {
         this.disableSignup = !allowsSignup;
-        this.name = name;
 
         if (certFile != null && !certFile.isEmpty() && keyFile != null && !keyFile.isEmpty()) {
             this.certFile = certFile;
@@ -162,16 +160,6 @@ public class WwpassSecurityRealm extends SecurityRealm {
     @Override
     public String getLoginUrl() {
         return "securityRealm/login";
-    }
-
-    public String getName() {
-        String name = WwpassUtils.getName(certFile, keyFile);
-
-        if (name == null || name.isEmpty()) {
-            return this.name;
-        } else {
-            return name;
-        }
     }
 
     public String getKeyFile() {

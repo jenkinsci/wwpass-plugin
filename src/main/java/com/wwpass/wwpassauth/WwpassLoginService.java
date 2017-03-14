@@ -60,46 +60,12 @@ public class WwpassLoginService extends FederatedLoginService {
 
     private static final Logger LOGGER = Logger.getLogger(WwpassLoginService.class.getName());
 
-    private String name;
-
-    public WwpassLoginService() {
-        super();
-    }
-
-    @DataBoundConstructor
-    public WwpassLoginService(String name) {
-        super();
-        this.name = name;
-    }
-
     private String getCertFile() {
-        String certFile = getDescriptor().getCertFile();
-        if (certFile == null || certFile.isEmpty()) {
-            if (System.getProperty("os.name").startsWith("Windows")) {
-                certFile = DEFAULT_CERT_FILE_WINDOWS;
-            } else if (System.getProperty("os.name").startsWith("Linux")) {
-                certFile = DEFAULT_CERT_FILE_LINUX;
-            } else {
-                LOGGER.severe(Messages.WwpassSession_UnsupportedOsError());
-                throw new Failure(Messages.WwpassSession_AuthError());
-            }
-        }
-        return certFile;
+        return getDescriptor().getCertFile();
     }
 
     private String getKeyFile() {
-        String keyFile = getDescriptor().getKeyFile();
-        if (keyFile == null || keyFile.isEmpty()) {
-            if (System.getProperty("os.name").startsWith("Windows")) {
-                keyFile = DEFAULT_KEY_FILE_WINDOWS;
-            } else if (System.getProperty("os.name").startsWith("Linux")) {
-                keyFile = DEFAULT_KEY_FILE_LINUX;
-            } else {
-                LOGGER.severe(Messages.WwpassSession_UnsupportedOsError());
-                throw new Failure(Messages.WwpassSession_AuthError());
-            }
-        }
-        return keyFile;
+        return getDescriptor().getKeyFile();
     }
 
     @Override
@@ -133,10 +99,6 @@ public class WwpassLoginService extends FederatedLoginService {
 
     public HttpResponse doGetTicket() throws IOException {
         return getJsonTicket("", getCertFile(), getKeyFile());
-    }
-
-    private String getName() {
-        return WwpassUtils.getName(getCertFile(), getKeyFile());
     }
 
     public DescriptorImpl getDescriptor() {

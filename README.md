@@ -33,4 +33,4 @@ Plugin searches the certificate-key pair on the following paths by default:
 | Certificate file | C:/wwpass/wwpass_sp.crt | /etc/ssl/certs/wwpass_sp.crt | 
 | Key file         | C:/wwpass/wwpass_sp.key | /etc/ssl/certs/wwpass_sp.key |
 
-You may use this paths and names. If you want to use other paths and names for these files, change it in Jenkins settings (if you use WWPass authentication as a secondary realm, change these properties in **Manage Jenkins > Configure System**, or if you use it as a primary realm -- in **Manage Jenkins > Configure Global Security**).
+You may use this paths and names. If you want to use other paths and names for these files, change it in Jenkins settings (if you use WWPass authentication as a secondary realm, change these properties in **Manage Jenkins > Configure System**, or if you use it as a primary realm &ndash; in **Manage Jenkins > Configure Global Security**).

@@ -21,21 +21,6 @@
  */
 package com.wwpass.wwpassauth;
 
-import hudson.Extension;
-import hudson.model.*;
-import hudson.security.*;
-import hudson.util.PluginServletFilter;
-import jenkins.model.Jenkins;
-import org.acegisecurity.*;
-import org.acegisecurity.context.SecurityContextHolder;
-
-import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.kohsuke.stapler.*;
-import org.springframework.dao.DataAccessException;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -43,9 +28,51 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-import static com.wwpass.wwpassauth.WwpassUtils.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+
+import hudson.Extension;
+import hudson.model.Descriptor;
+import hudson.model.Failure;
+import hudson.model.User;
+import hudson.security.AuthorizationStrategy;
+import hudson.security.FederatedLoginService;
+import hudson.security.GroupDetails;
+import hudson.security.PermissionAdder;
+import hudson.security.SecurityRealm;
+import hudson.util.PluginServletFilter;
+
+import jenkins.model.Jenkins;
+
+import org.acegisecurity.Authentication;
+import org.acegisecurity.AuthenticationException;
+import org.acegisecurity.AuthenticationManager;
+import org.acegisecurity.BadCredentialsException;
+import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.userdetails.UsernameNotFoundException;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import org.springframework.dao.DataAccessException;
+
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_CERT_FILE_LINUX;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_CERT_FILE_WINDOWS;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_KEY_FILE_LINUX;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_KEY_FILE_WINDOWS;
+import static com.wwpass.wwpassauth.WwpassUtils.authenticateInWwpass;
 
 public class WwpassSecurityRealm extends SecurityRealm {
 

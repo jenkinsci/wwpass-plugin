@@ -21,19 +21,22 @@
  */
 package com.wwpass.wwpassauth;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import hudson.Extension;
 import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
 import hudson.security.SecurityRealm;
+
 import jenkins.model.Jenkins;
+
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class WwpassIdentity extends UserProperty implements UserDetails{

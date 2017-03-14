@@ -21,14 +21,14 @@
  */
 package com.wwpass.wwpassauth;
 
-import hudson.security.SecurityRealm;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.providers.AbstractAuthenticationToken;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import hudson.security.SecurityRealm;
+
+import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.providers.AbstractAuthenticationToken;
 
 
 /**

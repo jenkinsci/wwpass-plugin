@@ -21,23 +21,35 @@
  */
 package com.wwpass.wwpassauth;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.logging.Logger;
+
 import hudson.Extension;
 import hudson.model.Descriptor;
 import hudson.model.Failure;
 import hudson.model.User;
 import hudson.security.FederatedLoginService;
 import hudson.security.FederatedLoginServiceUserProperty;
+
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.Jenkins;
+
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.*;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.logging.Logger;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.HttpRedirect;
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
 
-import static com.wwpass.wwpassauth.WwpassUtils.*;
-
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_CERT_FILE_LINUX;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_CERT_FILE_WINDOWS;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_KEY_FILE_LINUX;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_KEY_FILE_WINDOWS;
+import static com.wwpass.wwpassauth.WwpassUtils.authenticateInWwpass;
+import static com.wwpass.wwpassauth.WwpassUtils.getJsonTicket;
 
 
 /**

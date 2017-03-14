@@ -21,21 +21,22 @@
  */
 package com.wwpass.wwpassauth;
 
-import com.wwpass.connection.WWPassConnection;
-import com.wwpass.connection.exceptions.WWPassProtocolException;
-import hudson.model.Failure;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.HttpResponses;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import hudson.model.Failure;
+
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
+
+import com.wwpass.connection.WWPassConnection;
+import com.wwpass.connection.exceptions.WWPassProtocolException;
+
 
 public class WwpassUtils {
-
     private static final Logger LOGGER = Logger.getLogger(WwpassUtils.class.getName());
 
     public static final String DEFAULT_CERT_FILE_WINDOWS = "C:/wwpass/wwpass_sp.crt";

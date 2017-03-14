@@ -192,13 +192,11 @@ public class WwpassLoginService extends FederatedLoginService {
 
         private String certFile;
         private String keyFile;
-        private String name;
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
             this.certFile = json.getString("certFile");
             this.keyFile = json.getString("keyFile");
-            this.name = json.getString("name");
 
             save();
             return super.configure(req, json);    //To change body of overridden methods use File | Settings | File Templates.
@@ -234,13 +232,7 @@ public class WwpassLoginService extends FederatedLoginService {
             return keyFile;
         }
         public String getName() {
-            String name = WwpassUtils.getName(getCertFile(), getKeyFile());
-
-            if (name == null || name.isEmpty()) {
-                return this.name;
-            } else {
-                return name;
-            }
+            return WwpassUtils.getName(getCertFile(), getKeyFile());
         }
     }
 }

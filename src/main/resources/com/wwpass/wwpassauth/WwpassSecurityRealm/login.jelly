@@ -1,15 +1,11 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
-    <l:layout title="${%Login with WWPass}">
+    <l:layout title="Sign In With WWPass">
         <l:hasPermission permission="${app.READ}" it="${app}">
             <st:include page="sidepanel.jelly" it="${app}" />
         </l:hasPermission>
         <l:main-panel>
-            <h1>${%Sign In with WWPass}</h1>
             <div>
-                <script type="text/javascript" src="http://cdn.wwpass.com/packages/wwpass.js/2.1/wwpass.js"/>
-                <script type="text/javascript" src="${rootURL}/plugin/wwpass-auth/wwpass_button.js"/>
-
                 <j:if test="${errorMessage!=null}">
                     <div class="error" style="margin-bottom:1em">
                         ${errorMessage}

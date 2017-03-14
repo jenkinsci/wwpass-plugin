@@ -131,6 +131,10 @@ public class WwpassLoginService extends FederatedLoginService {
         }
 
     }
+    
+    public HttpResponse doGetTicket() throws IOException {
+        return getJsonTicket("", getCertFile(), getKeyFile());
+    }
 
     private String getName() {
         return WwpassUtils.getName(getCertFile(),getKeyFile());

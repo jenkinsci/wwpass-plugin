@@ -28,9 +28,9 @@ THE SOFTWARE.
         <j:arg value="${if (request.session.attribute('from')!=null) request.session.getAttribute('from');  else if (request.getParameter('from')!=null) request.getParameter('from'); else if (request.requestURI=='/loginError' || request.requestURI=='/login') '/'; else request.requestURI;}"/>
         <j:arg value="UTF-8"/>
     </j:invokeStatic>
-    <a style="color:inherit" href="${rootURL}/${app.securityRealm.loginUrl}?from=${from}"><b>${%login}</b></a>
+    <a style="color:inherit" href="${app.rootURL}/${app.securityRealm.loginUrl}?from=${from}"><b>${%sign in}</b></a>
     <j:if test="${it.allowsSignup()}">
         |
-        <a href="${rootURL}/securityRealm/signup"><b>${%sign up}</b></a>
+        <a href="${app.rootURL}/securityRealm/signup"><b>${%sign up}</b></a>
     </j:if>
 </j:jelly>

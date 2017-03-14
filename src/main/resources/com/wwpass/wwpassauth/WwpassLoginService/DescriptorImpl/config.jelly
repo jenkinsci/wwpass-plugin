@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
     <f:section title="WWPass Authentication Plugin">
@@ -9,9 +10,9 @@
         </f:entry>
     </f:section>
 
-    <f:advanced align="left">
+    <!--<f:advanced align="left">
         <f:entry title="${%}Service Provider's name" field="name">
             <f:textbox/>
         </f:entry>
-    </f:advanced>
+    </f:advanced>-->
 </j:jelly>

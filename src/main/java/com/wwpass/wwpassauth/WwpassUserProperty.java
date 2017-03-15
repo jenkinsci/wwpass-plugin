@@ -21,6 +21,11 @@
  */
 package com.wwpass.wwpassauth;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import hudson.Extension;
 import hudson.model.User;
 import hudson.model.UserProperty;
@@ -28,15 +33,12 @@ import hudson.model.UserPropertyDescriptor;
 import hudson.security.AbstractPasswordBasedSecurityRealm;
 import hudson.security.FederatedLoginServiceUserProperty;
 import hudson.util.Secret;
-import jenkins.model.Jenkins;
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 import static hudson.Util.fixNull;
+
+import jenkins.model.Jenkins;
+
+import org.kohsuke.stapler.DataBoundConstructor;
 
 
 public class WwpassUserProperty extends FederatedLoginServiceUserProperty {
@@ -50,15 +52,17 @@ public class WwpassUserProperty extends FederatedLoginServiceUserProperty {
      */
     private static List<String> unencrypt(Set<String> identifiers) {
         List<String> r = new ArrayList<String>();
-        for (String id : identifiers)
+        for (String id : identifiers) {
             r.add(Secret.fromString(id).getPlainText());
+        }
         return r;
     }
 
     public List<Secret> getProtectedPuids() {
         List<Secret> r = new ArrayList<Secret>();
-        for (String id : getIdentifiers())
+        for (String id : getIdentifiers()) {
             r.add(Secret.fromString(id));
+        }
         return r;
     }
 
@@ -84,6 +88,5 @@ public class WwpassUserProperty extends FederatedLoginServiceUserProperty {
             WwpassLoginService wls = (WwpassLoginService) Jenkins.getInstance().getFederatedLoginService("wwpass");
             return wls.getDescriptor().getName();
         }
-
     }
 }

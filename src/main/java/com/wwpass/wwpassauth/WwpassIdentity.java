@@ -21,24 +21,27 @@
  */
 package com.wwpass.wwpassauth;
 
-import hudson.Extension;
-import hudson.model.User;
-import hudson.model.UserProperty;
-import hudson.model.UserPropertyDescriptor;
-import hudson.security.SecurityRealm;
-import jenkins.model.Jenkins;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.userdetails.UserDetails;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import hudson.Extension;
+import hudson.model.User;
+import hudson.model.UserProperty;
+import hudson.model.UserPropertyDescriptor;
+import hudson.security.SecurityRealm;
 
-public class WwpassIdentity extends UserProperty implements UserDetails{
+import jenkins.model.Jenkins;
+
+import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.userdetails.UserDetails;
+
+
+public class WwpassIdentity extends UserProperty implements UserDetails {
 
     private static final Logger LOGGER = Logger.getLogger(WwpassIdentity.class.getName());
+    private static final GrantedAuthority[] TEST_AUTHORITY = { SecurityRealm.AUTHENTICATED_AUTHORITY };
 
     private final String puid;
 
@@ -48,7 +51,6 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
 
     private boolean activated;
 
-    private static final GrantedAuthority[] TEST_AUTHORITY = {SecurityRealm.AUTHENTICATED_AUTHORITY};
 
     public WwpassIdentity(String puid) {
         this.puid = puid;
@@ -59,7 +61,6 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
         this.puid = puid;
         this.fullname = u.getFullName();
         this.nickname = u.getId();
-
     }
 
     public void populate(WwpassSecurityRealm.SignupInfo si) {
@@ -100,8 +101,12 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
      * Obtains the token suitable as the user ID.
      */
     public String getEffectiveNick() {
-        if (getNickname()!=null)     return getNickname();
-        if (getEmail()!=null)    return getEmail();
+        if (getNickname() != null) {
+            return getNickname();
+        }
+        if (getEmail() != null) {
+            return getEmail();
+        }
         return getPuid();
     }
 
@@ -110,9 +115,11 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
      */
     public void updateProfile(User u) throws IOException {
         // update the user profile by the externally given information
-        if (getFullname()!=null)
+        if (getFullname() != null) {
             u.setFullName(getFullname());
-        if (getEmail()!=null) {
+        }
+
+        if (getEmail() != null) {
             try {
                 // legacy hack. mail support has moved out to a separate plugin
                 Class<?> up = Jenkins.getInstance().pluginManager.uberClassLoader.loadClass("hudson.tasks.Mailer$UserProperty");
@@ -121,7 +128,7 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {
-                LOGGER.log(Level.WARNING, "Failed to set the e-mail address",e);
+                LOGGER.log(Level.WARNING, "Failed to set the e-mail address", e);
             }
         }
     }
@@ -129,6 +136,7 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
     public void activate() {
         this.activated = true;
     }
+
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
      *
@@ -201,6 +209,7 @@ public class WwpassIdentity extends UserProperty implements UserDetails{
     public boolean isEnabled() {
         return activated;
     }
+
     @Extension
     public static class DescriptorImpl extends UserPropertyDescriptor {
         @Override

@@ -21,21 +21,6 @@
  */
 package com.wwpass.wwpassauth;
 
-import hudson.Extension;
-import hudson.model.*;
-import hudson.security.*;
-import hudson.util.PluginServletFilter;
-import jenkins.model.Jenkins;
-import org.acegisecurity.*;
-import org.acegisecurity.context.SecurityContextHolder;
-
-import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.kohsuke.stapler.*;
-import org.springframework.dao.DataAccessException;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -43,18 +28,58 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-import static com.wwpass.wwpassauth.WwpassUtils.*;
+
+import hudson.Extension;
+import hudson.model.Descriptor;
+import hudson.model.Failure;
+import hudson.model.User;
+import hudson.security.AuthorizationStrategy;
+import hudson.security.FederatedLoginService;
+import hudson.security.GroupDetails;
+import hudson.security.PermissionAdder;
+import hudson.security.SecurityRealm;
+import hudson.util.PluginServletFilter;
+
+import jenkins.model.Jenkins;
+
+import org.acegisecurity.Authentication;
+import org.acegisecurity.AuthenticationException;
+import org.acegisecurity.AuthenticationManager;
+import org.acegisecurity.BadCredentialsException;
+import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.userdetails.UsernameNotFoundException;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import org.springframework.dao.DataAccessException;
+
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_CERT_FILE_LINUX;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_CERT_FILE_WINDOWS;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_KEY_FILE_LINUX;
+import static com.wwpass.wwpassauth.WwpassUtils.DEFAULT_KEY_FILE_WINDOWS;
+import static com.wwpass.wwpassauth.WwpassUtils.authenticateInWwpass;
 
 
 public class WwpassSecurityRealm extends SecurityRealm {
-
     private static final Logger LOGGER = Logger.getLogger(WwpassSecurityRealm.class.getName());
-
 
     private final String certFile;
     private final String keyFile;
-    private final String name;
 
     /**
      * If true, sign up is not allowed.
@@ -64,11 +89,8 @@ public class WwpassSecurityRealm extends SecurityRealm {
     private final boolean disableSignup;
 
     @DataBoundConstructor
-    public WwpassSecurityRealm(String certFile, String keyFile, String name, boolean allowsSignup) {
-
+    public WwpassSecurityRealm(String certFile, String keyFile, boolean allowsSignup) {
         this.disableSignup = !allowsSignup;
-
-        this.name = name;
 
         if (certFile != null && !certFile.isEmpty() && keyFile != null && !keyFile.isEmpty()) {
             this.certFile = certFile;
@@ -86,7 +108,7 @@ public class WwpassSecurityRealm extends SecurityRealm {
             }
         }
 
-        if(!hasSomeUser()) {
+        if (!hasSomeUser()) {
             // if Hudson is newly set up with the security realm and there's no user account created yet,
             // insert a filter that asks the user to create one
             try {
@@ -95,20 +117,19 @@ public class WwpassSecurityRealm extends SecurityRealm {
                 throw new AssertionError(e); // never happen because our Filter.init is no-op
             }
         }
-
     }
 
     @Override
     public SecurityComponents createSecurityComponents() {
         return new SecurityComponents(
-                new AuthenticationManager() {
-                    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                        if (authentication instanceof WwpassAuthenticationToken) {
-                            return authentication;
-                        }
-                        throw new BadCredentialsException("Unexpected authentication type: " + authentication);
+            new AuthenticationManager() {
+                public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                    if (authentication instanceof WwpassAuthenticationToken) {
+                        return authentication;
                     }
+                    throw new BadCredentialsException("Unexpected authentication type: " + authentication);
                 }
+            }
         );
     }
 
@@ -116,16 +137,13 @@ public class WwpassSecurityRealm extends SecurityRealm {
     @Override
     public WwpassIdentity loadUserByUsername(String puid) throws UsernameNotFoundException, DataAccessException {
         Collection<User> all = User.getAll();
-
         for (User u : all) {
             WwpassIdentity p = u.getProperty(WwpassIdentity.class);
             if (puid.equals(p != null ? p.getPuid() : null)) {
                 return p;
             }
         }
-
         throw new UsernameNotFoundException("There is no any user with: " + puid);
-
     }
 
     /**
@@ -142,18 +160,6 @@ public class WwpassSecurityRealm extends SecurityRealm {
     @Override
     public String getLoginUrl() {
         return "securityRealm/login";
-    }
-
-    public String getName() {
-
-        String name = WwpassUtils.getName(certFile, keyFile);
-
-        if (name == null || name.isEmpty()) {
-            return this.name;
-        } else {
-            return name;
-        }
-
     }
 
     public String getKeyFile() {
@@ -178,18 +184,17 @@ public class WwpassSecurityRealm extends SecurityRealm {
             u = loadUserByUsername(puid);
         } catch(UsernameNotFoundException e) {
             if (allowsSignup()) {
-                req.setAttribute("errorMessage",Messages.WwpassSecurityRealm_NoSuchUserAllowsSignup());
+                req.setAttribute("errorMessage", Messages.WwpassSecurityRealm_NoSuchUserAllowsSignup());
             } else {
-                req.setAttribute("errorMessage",Messages.WwpassSecurityRealm_NoSuchUserDisableSignup());
+                req.setAttribute("errorMessage", Messages.WwpassSecurityRealm_NoSuchUserDisableSignup());
             }
-            req.getView(this, "login.jelly").forward(req,rsp);
+            req.getView(this, "login.jelly").forward(req, rsp);
             throw e;
         }
         if (!u.isAccountNonLocked() || !u.isEnabled()) {
             //throw new LockedException("Account is not activated for " + puid);
             throw new Failure(Messages.WwpassSecurityRealm_AccountNotActivated());
         }
-
         Authentication a = new WwpassAuthenticationToken(u.getNickname());
         a = this.getSecurityComponents().manager.authenticate(a);
         SecurityContextHolder.getContext().setAuthentication(a);
@@ -208,17 +213,15 @@ public class WwpassSecurityRealm extends SecurityRealm {
         SecurityContextHolder.getContext().setAuthentication(a);
 
         // then back to top
-        req.getView(this,"success.jelly").forward(req,rsp);
+        req.getView(this, "success.jelly").forward(req, rsp);
     }
 
     /**
      * @return <code>null</code> if failed. The browser is already redirected to retry by the time this method returns.
      *      a valid {@link User} object if the user creation was successful.
      */
-    private User createAccount(StaplerRequest req, StaplerResponse rsp,String formView) throws ServletException, IOException {
-
+    private User createAccount(StaplerRequest req, StaplerResponse rsp, String formView) throws ServletException, IOException {
         SignupInfo si = new SignupInfo(req);
-
         String puid = authenticateInWwpass(si.ticket, certFile, keyFile);
 
         try {
@@ -226,34 +229,38 @@ public class WwpassSecurityRealm extends SecurityRealm {
                 si.errorMessages.add(Messages.WwpassSecurityRealm_PuidIsAlreadyTaken());
             }
         } catch (UsernameNotFoundException e) {
-
         }
 
-        if(si.nickname==null || si.nickname.length()==0)
+        if (si.nickname == null || si.nickname.length() == 0) {
             si.errorMessages.add(Messages.WwpassSecurityRealm_NicknameIsRequired());
-        else {
+        } else {
             User user = User.get(si.nickname, false);
-            if (null != user)
-                if (user.getProperty(WwpassIdentity.class) != null)
+            if (null != user) {
+                if (user.getProperty(WwpassIdentity.class) != null) {
                     si.errorMessages.add(Messages.WwpassSecurityRealm_NicknameIsAlreadyTaken());
+                }
+            }
         }
 
-        if(si.fullname==null || si.fullname.length()==0)
+        if (si.fullname == null || si.fullname.length() == 0) {
             si.errorMessages.add(Messages.WwpassSecurityRealm_FullnameIsRequired());
-        else {
+        } else {
             User user = User.get(si.fullname, false);
-            if (null != user)
-                if (user.getProperty(WwpassIdentity.class) != null)
+            if (null != user) {
+                if (user.getProperty(WwpassIdentity.class) != null) {
                     si.errorMessages.add(Messages.WwpassSecurityRealm_FullnameIsAlreadyTaken());
+                }
+            }
         }
 
-        if(si.email==null || !si.email.contains("@"))
+        if (si.email == null || !si.email.contains("@")) {
             si.errorMessages.add(Messages.WwpassSecurityRealm_InvalidEmailAddress());
+        }
 
-        if( !si.errorMessages.isEmpty() ) {
+        if (!si.errorMessages.isEmpty()) {
             // failed. ask the user to try again.
-            req.setAttribute("data",si);
-            req.getView(this, formView).forward(req,rsp);
+            req.setAttribute("data", si);
+            req.getView(this, formView).forward(req, rsp);
             return null;
         }
 
@@ -276,7 +283,7 @@ public class WwpassSecurityRealm extends SecurityRealm {
         user.addProperty(id);
         return user;
     }
-    
+
     /**
      * Creates an user account. Used for self-registration.
      */
@@ -285,14 +292,15 @@ public class WwpassSecurityRealm extends SecurityRealm {
     }
 
     private User _doCreateAccount(StaplerRequest req, StaplerResponse rsp, String formView) throws ServletException, IOException {
-        if(!allowsSignup())
-            throw HttpResponses.error(SC_UNAUTHORIZED,new Exception("User sign up is prohibited"));
-
+        if (!allowsSignup()) {
+            throw HttpResponses.error(SC_UNAUTHORIZED, new Exception("User sign up is prohibited"));
+        }
         boolean firstUser = !hasSomeUser();
         User u = createAccount(req, rsp, formView);
-        if(u!=null) {
-            if(firstUser)
-                tryToMakeAdmin(u);  // the first user should be admin, or else there's a risk of lock out
+        if (u != null) {
+            if (firstUser) {
+                tryToMakeAdmin(u); // the first user should be admin, or else there's a risk of lock out
+            }
             loginAndTakeBack(req, rsp, u);
         }
         return u;
@@ -305,12 +313,12 @@ public class WwpassSecurityRealm extends SecurityRealm {
      * This can be run by anyone, but only to create the very first user account.
      */
     public void doCreateFirstAccount(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        if(hasSomeUser()) {
-            rsp.sendError(SC_UNAUTHORIZED,"First user was already created");
+        if (hasSomeUser()) {
+            rsp.sendError(SC_UNAUTHORIZED, "First user was already created");
             return;
         }
         User u = createAccount(req, rsp, "firstUser.jelly");
-        if (u!=null) {
+        if (u != null) {
             tryToMakeAdmin(u);
             loginAndTakeBack(req, rsp, u);
         }
@@ -345,9 +353,11 @@ public class WwpassSecurityRealm extends SecurityRealm {
      * This is used to check for the initial
      */
     private static boolean hasSomeUser() {
-        for (User u : User.getAll())
-            if(u.getProperty(WwpassIdentity.class)!=null)
+        for (User u : User.getAll()) {
+            if (u.getProperty(WwpassIdentity.class) != null) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -358,16 +368,16 @@ public class WwpassSecurityRealm extends SecurityRealm {
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
             HttpServletRequest req = (HttpServletRequest) request;
 
-            if(req.getRequestURI().equals(req.getContextPath()+"/")) {
+            if (req.getRequestURI().equals(req.getContextPath()+"/")) {
                 if (needsToCreateFirstUser()) {
                     ((HttpServletResponse)response).sendRedirect("securityRealm/firstUser");
-                } else {// the first user already created. the role of this filter is over.
+                } else { // the first user already created. the role of this filter is over.
                     PluginServletFilter.removeFilter(this);
-                    chain.doFilter(request,response);
+                    chain.doFilter(request, response);
                 }
-            } else
-                chain.doFilter(request,response);
-
+            } else {
+                chain.doFilter(request, response);
+            }
         }
 
         private boolean needsToCreateFirstUser() {
@@ -379,13 +389,11 @@ public class WwpassSecurityRealm extends SecurityRealm {
         }
     };
 
-
     public static final class SignupInfo {
-
         public String nickname, fullname, email, ticket;
 
         /**
-         * To display an error messages, set its here.
+         * To display error messages, set them here.
          */
         public List<String> errorMessages = new ArrayList<String>();
 
